@@ -1,0 +1,8 @@
+name: SaehyeonLib
+version: '${project.version}'
+main: me.saehyeon.saehyeonlib.main.SaehyeonLib
+api-version: 1.16
+authors: [ Saehyeon ]
+description: 방송용 컨텐츠 개발의 생산성을 높이기 위한 라이브러리
+commands:
+  s-lib:
