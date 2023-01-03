@@ -7,6 +7,7 @@ import me.saehyeon.saehyeonlib.event.onCommand;
 import me.saehyeon.saehyeonlib.event.onInventory;
 import me.saehyeon.saehyeonlib.region.Region;
 import me.saehyeon.saehyeonlib.role.ExPlayer;
+import me.saehyeon.saehyeonlib.role.Role;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.state.State;
 import me.saehyeon.saehyeonlib.util.Stringf;
@@ -46,6 +47,10 @@ public final class SaehyeonLib extends JavaPlugin {
         new PlayerState().load();
         new State().load();
 
+        new Role("test-role1",1).register();
+        new Role("test-role2",1).register();
+        new Role("test-role3").register();
+        new Role("test-role4").register();
     }
 
     @Override

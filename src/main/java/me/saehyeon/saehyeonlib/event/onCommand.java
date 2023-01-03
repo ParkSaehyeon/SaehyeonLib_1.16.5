@@ -46,6 +46,13 @@ public class onCommand implements CommandExecutor {
             Region targetRegion = Region.findByName(args.length > 2 ? args[2] : "");
 
             switch(args[0]) {
+                case "debugMode":
+                    SaehyeonLib.debugMode = !SaehyeonLib.debugMode;
+
+                    p.sendMessage("debugMode: "+SaehyeonLib.debugMode);
+
+                    break;
+
                 case "debug":
 
                     if(args.length == 2) {
@@ -439,6 +446,106 @@ public class onCommand implements CommandExecutor {
                             break;
 
                         default:
+                            break;
+                    }
+                    break;
+
+                case "역할":
+
+                    switch (args[1]) {
+                        case "목록":
+
+                            if(args.length >= 3) {
+
+                                Player target = Bukkit.getPlayer(args[2]);
+
+                                if(target != null) {
+
+                                    p.sendMessage("");
+                                    p.sendMessage("§7"+target.getName()+"§f의 역할은 다음과 같습니다:");
+
+                                    Role role = Role.findByPlayer(target);
+
+                                    if(role != null) {
+                                        p.sendMessage(" - 이름: "+role.getName()+" | 배정되어야 하는 인원 수: "+role.getNeedPeopleAmount()+" | 현재 인원 수: "+role.getPlayers().size()+"명");
+                                    } else {
+                                        p.sendMessage("§7이 플레이어는 역할이 없습니다.");
+                                    }
+
+
+                                } else {
+                                    p.sendMessage("§c"+args[2]+"(이)라는 플레이어는 서버에 없습니다.");
+                                }
+
+                                return false;
+                            }
+
+                            p.sendMessage("");
+                            p.sendMessage("현재 등록된 역할 목록은 다음과 같습니다:");
+
+                            Role.roles.forEach(role -> finalP.sendMessage(" - 이름: "+role.getName()+" | 배정되어야 하는 인원 수: "+role.getNeedPeopleAmount()+"명 (0일 시 제한없음)"+" | 현재 인원 수: "+role.getPlayers().size()+"명"));
+
+                            break;
+
+                        case "추가":
+                            if(args.length >= 4) {
+
+                                Player target = Bukkit.getPlayer(args[2]);
+
+                                if(target != null) {
+
+                                    Role role = Role.findByName(args[3]);
+
+                                    if(role != null) {
+
+                                        role.add(target);
+                                        p.sendMessage("§7"+target.getName()+"§f에게 §7"+role.getName()+"§f(을)를 부여했습니다.");
+
+                                    } else {
+                                        p.sendMessage("§c"+args[3]+"(이)라는 이름을 가진 역할을 찾을 수 없습니다.");
+                                    }
+
+                                } else {
+                                    p.sendMessage("§c"+args[2]+"(이)라는 플레이어는 서버에 없습니다.");
+                                }
+
+                                return false;
+                            }
+
+                            break;
+
+                        case "제거":
+                            if(args.length >= 4) {
+
+                                Player target = Bukkit.getPlayer(args[2]);
+
+                                if(target != null) {
+
+                                    Role role = Role.findByName(args[3]);
+
+                                    if(role != null && role.getPlayers().contains(target)) {
+
+                                        role.remove(target);
+                                        p.sendMessage("§7"+target.getName()+"§f에게서 §7"+role.getName()+"§f(을)를 제거했습니다.");
+
+                                    } else {
+                                        p.sendMessage("§c"+target.getName()+"에게는 "+args[3]+"(이)라는 역할이 부여되어 있지 않습니다.");
+                                    }
+
+                                } else {
+                                    p.sendMessage("§c"+args[2]+"(이)라는 플레이어는 서버에 없습니다.");
+                                }
+
+                                return false;
+                            }
+
+                            break;
+
+                        case "모두재분배":
+
+                            Role.applyRandomAll();
+                            p.sendMessage("모든 역할을 모든 플레이어에게 재분배합니다.");
+
                             break;
                     }
                     break;

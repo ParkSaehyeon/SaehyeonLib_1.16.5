@@ -53,6 +53,12 @@ public class Role {
         team = SaehyeonLib.scoreboard.registerNewTeam(name);
     }
 
+    public Role(String name,int needPeople) {
+        this.name = name;
+        this.needPeople = needPeople;
+        team = SaehyeonLib.scoreboard.registerNewTeam(name);
+    }
+
     /**
      * 이 역할이 배정되어야 할 인원 수를 설정합니다.<br>
      * @param amount 0 이상의 자연수만약 <b>매개변수가 0이라면 설정하지 않는 것입니다.</b>applyRandom 메소드로 사람들에게 역할을 랜덤 배정할 때, 이 값이 0이 아닌 역할이 먼저 배정됩니다.
@@ -81,6 +87,12 @@ public class Role {
 
         if(players.contains(player))
             return;
+
+        // 플레이어가 기존에 가지고 있던 역할은 없애기
+        Role formerRole = Role.findByPlayer(player);
+
+        if(formerRole != null)
+            formerRole.remove(player);
 
         players.add(player);
 
@@ -226,6 +238,9 @@ public class Role {
      */
     public static void applyRandom(List<Player> players, RoleCallback callback) {
 
+        // 먼저 플레이어들의 역할 없애기
+        players.forEach(Role::removeIfHas);
+
         // 배정 인원이 정해진 역할들과 그렇지 않은 역할들을 나누기
         ArrayList<Role> needPeopleRoles     = (ArrayList<Role>) roles.clone();
         ArrayList<Role> notNeedPeopleRoles  = (ArrayList<Role>) roles.clone();
@@ -234,34 +249,47 @@ public class Role {
         notNeedPeopleRoles.removeIf(role -> role.needPeople != 0);
 
         // 역할을 배정받아야 하는 인원 수가 충분한지 확인
-        int needPeople = needPeopleRoles.size()+notNeedPeopleRoles.size();
+        int needPeople = needPeopleRoles.size();
 
         if(players.size() < needPeople) {
-            Bukkit.broadcastMessage("§c역할 랜덤 배정이 불가합니다. (§u"+needPeople+"명이 필요§c하지만 현재 역할 배정 대상은 "+players.size()+"명입니다.");
+            Bukkit.broadcastMessage("§c역할 랜덤 배정이 불가합니다. ("+needPeople+"명이 필요§c하지만 현재 역할 배정 대상은 "+players.size()+"명입니다.)");
             return;
         }
 
         // 배정 인원을 요구하는 역할들 먼저 배정하기
         Collections.shuffle(players);
-        Collections.shuffle(players);
+        Collections.shuffle(needPeopleRoles);
+        Collections.shuffle(notNeedPeopleRoles);
 
         // 현재까지 배정된 플레이어 목록의 인덱스
         int curPlayersIndex = 0;
 
+        SaehyeonLib.debugLog("인원 수가 정해져있는 역할 먼저 분배: ");
+
         for(Role role : needPeopleRoles) {
 
-            while(role.needPeople >= role.players.size()) {
+            SaehyeonLib.debugLog(" -> "+role.getName()+"에 역할 분배중 (필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.players.size()+")");
+
+            while(role.needPeople != role.players.size()) {
 
                 Player targetPlayer = players.get(curPlayersIndex++);
                 role.add(targetPlayer);
-
+                SaehyeonLib.debugLog(" --> "+targetPlayer.getName()+"(이)가 이 역할에 소속됐음.");
+                SaehyeonLib.debugLog(" ---> 이 역할의 필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.players.size());
             }
 
         }
 
+        SaehyeonLib.debugLog("\n인원 수가 정해진 역할 분배 끝, 인원 수 제한이 없는 역할 분배 시작: ");
+        SaehyeonLib.debugLog(" -> 모든 사람이 역할을 분배받아서 작업을 종료해야 하는가?(역할을 분배받은 마지막 플레이어 번째: "+curPlayersIndex+" / 플레이어 수: "+players.size()+")");
+
         // 배정 인원이 정해지지 않은 남은 역할들 배정
         // 만약 이미 모든 사람이 위 작업에서 역할을 배정받았다면 작업 종료
-        if(curPlayersIndex < players.size()-1) {
+        // 여기서 curPlayerIndex에 -1을 하는 이유는 위 반복문에서 마지막으로 역할을 부여받은 번째 수에 +1을 하기 때문(실제로는 +1되는  시점의 플레이어가 마지막으로 부여받는데)
+        // 즉, 반복문의 마지막에서 +1되는 것을 취소하는 것
+        if(curPlayersIndex-1 < players.size()-1) {
+
+            SaehyeonLib.debugLog(" -> 작업 시작: ");
 
             // 역할들 섞기
             Collections.shuffle(notNeedPeopleRoles);
@@ -270,16 +298,23 @@ public class Role {
             // 모두가 역할을 배정받을 때 까지 남은 역할 배정하기
             int roleIndex = 0;
 
-            for(Player p : players) {
+            for(int i = curPlayersIndex; i < players.size(); i++) {
 
-                notNeedPeopleRoles.get(roleIndex++).add(p);
+                Player p = players.get(i);
+
+                Role role = notNeedPeopleRoles.get(roleIndex++);
+
+                role.add(p);
+
+                SaehyeonLib.debugLog(" --> "+role.getName()+" 역할에 "+p.getName()+"(을)를 소속시킴.");
 
                 if(roleIndex > notNeedPeopleRoles.size()-1)
                     roleIndex = 0;
 
             }
-
         }
+
+        SaehyeonLib.debugLog("끝");
 
         // 역할 배정 완료
         if(callback != null)
@@ -303,13 +338,24 @@ public class Role {
      * 특정 플레이어가 적용받고 있는 역할들을 반환합니다.
      * @param player
      */
-    public static ArrayList<Role> findByPlayer(Player player) {
+    public static Role findByPlayer(Player player) {
 
         ArrayList<Role> result = new ArrayList<>( roles );
         result.removeIf(role -> !role.getPlayers().contains(player));
 
-        return result;
+        return result.isEmpty() ? null : result.get(0);
 
+    }
+
+    /**
+     * 특정 플레이어에게 부여된 역할이 있다면, 해당 역할에서 해당 플레이어를 제거합니다.
+     * @param player
+     */
+    public static void removeIfHas(Player player) {
+        Role role = Role.findByPlayer(player);
+
+        if(role != null)
+            role.remove(player);
     }
 
 }
