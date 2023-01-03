@@ -46,11 +46,6 @@ public final class SaehyeonLib extends JavaPlugin {
         Region.load();
         new PlayerState().load();
         new State().load();
-
-        new Role("test-role1",1).register();
-        new Role("test-role2",1).register();
-        new Role("test-role3").register();
-        new Role("test-role4").register();
     }
 
     @Override
