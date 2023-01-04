@@ -60,13 +60,15 @@ public class Role {
      * 이 역할이 배정되어야 할 인원 수를 설정합니다.<br>
      * @param amount 0 이상의 자연수만약 <b>매개변수가 0이라면 설정하지 않는 것입니다.</b>applyRandom 메소드로 사람들에게 역할을 랜덤 배정할 때, 이 값이 0이 아닌 역할이 먼저 배정됩니다.
      */
-    public void setNeedPeopleAmount(int amount) {
+    public Role setNeedPeopleAmount(int amount) {
         if(amount < 0) {
             SaehyeonLib.log(LogLevel.ERROR, name+" 역할의 인원 수를 "+amount+"로 설정할 수 없습니다. 인원 수는 0 이상의 자연수여야합니다.");
-            return;
+            return this;
         }
 
         this.needPeople = amount;
+
+        return this;
     }
 
     /**
@@ -80,13 +82,13 @@ public class Role {
      * 특정 플레이어를 이 역할에 소속시킵니다.
      * @param player 소속될 플레이어
      */
-    public void add(Player player) {
+    public Role add(Player player) {
 
         if(players.contains(player))
-            return;
+            return this;
 
         // 플레이어가 기존에 가지고 있던 역할은 없애기
-        Role formerRole = Role.findByPlayer(player);
+        Role formerRole = Role.getByPlayer(player);
 
         if(formerRole != null)
             formerRole.remove(player);
@@ -99,16 +101,20 @@ public class Role {
 
         SaehyeonLibEvent.doEvent(new RolePlayerAddEvent(player,this));
         SaehyeonLibEvent.doEvent(new RoleChangeEvent(this));
+
+        return this;
     }
 
     /**
      * 특정 플레이어를 이 역할에서 제거합니다.
      * @param player 제거될 플레이어
      */
-    public void remove(Player player) {
+    public Role remove(Player player) {
         players.remove(player);
         SaehyeonLibEvent.doEvent(new RolePlayerRemoveEvent(player,this));
         SaehyeonLibEvent.doEvent(new RoleChangeEvent(this));
+
+        return this;
     }
 
     /**
@@ -125,7 +131,7 @@ public class Role {
      * @param key
      * @param value
      */
-    public void setState(String key, Object value) {
+    public Role setState(String key, Object value) {
         if(value == null)
             state.remove(key);
         else
@@ -133,6 +139,8 @@ public class Role {
 
         SaehyeonLibEvent.doEvent(new RoleStateChangeEvent(key,value,this));
         SaehyeonLibEvent.doEvent(new RoleChangeEvent(this));
+
+        return this;
     }
 
     /**
@@ -158,7 +166,7 @@ public class Role {
      * 역할이 등록되면, 시스템은 이 역할은 공식적으로 사용되는 역할로 판단하고 역할 랜덤배정, 역할 검색 메소드 등에서 이 역할을 활용할 수 있게됩니다.
      */
     public void register() {
-        Role role = findByName(this.name);
+        Role role = getByName(this.name);
 
         // 만약 같은 이름을 가진 역할이 이미 있다면 등록 금지
         if(role != null) {
@@ -173,8 +181,9 @@ public class Role {
      * 이 역할의 이름을 설정합니다.
      * @param name 설정될 이름
      */
-    public void setName(String name) {
+    public Role setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -185,24 +194,22 @@ public class Role {
         return name;
     }
 
-    public void setPrefix(String prefix) {
+    public Role setPrefix(String prefix) {
         team.setPrefix(prefix);
+        return this;
     }
 
     public String getPrefix() {
         return team.getPrefix();
     }
 
-    public void setSuffix(String suffix) {
+    public Role setSuffix(String suffix) {
         team.setSuffix(suffix);
+        return this;
     }
 
     public String getSuffix() {
         return team.getSuffix();
-    }
-
-    public void ignoreWhenRandomApply(boolean ignore) {
-
     }
 
     /**
@@ -211,7 +218,7 @@ public class Role {
      * @param roleName
      * @return
      */
-    public static Role findByName(String roleName) {
+    public static Role getByName(String roleName) {
         for(Role role : roles) {
             if(role.getName().equals(roleName))
                 return role;
@@ -342,11 +349,20 @@ public class Role {
         applyRandom(players, null);
     }
 
+    public static void applyRandomAll(Role... ignoreRoles) {
+
+        ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+        players.removeIf(ExPlayer::contains);
+
+        applyRandom(players, null, ignoreRoles);
+    }
+
     /**
      * 특정 플레이어가 적용받고 있는 역할들을 반환합니다.
      * @param player
      */
-    public static Role findByPlayer(Player player) {
+    public static Role getByPlayer(Player player) {
 
         ArrayList<Role> result = new ArrayList<>( roles );
         result.removeIf(role -> !role.getPlayers().contains(player));
@@ -360,7 +376,7 @@ public class Role {
      * @param player
      */
     public static void removeIfHas(Player player) {
-        Role role = Role.findByPlayer(player);
+        Role role = Role.getByPlayer(player);
 
         if(role != null)
             role.remove(player);

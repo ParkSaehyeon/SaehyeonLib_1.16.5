@@ -31,13 +31,15 @@ public class Itemf {
         return item;
     }
 
-    public static void setDisplayName(ItemStack itemstack, String displayName) {
+    public static ItemStack setDisplayName(ItemStack itemstack, String displayName) {
         ItemMeta meta = itemstack.getItemMeta();
         meta.setDisplayName(displayName);
         itemstack.setItemMeta(meta);
+
+        return itemstack;
     }
 
-    public static void addLore(ItemStack itemstack, String lore) {
+    public static ItemStack addLore(ItemStack itemstack, String lore) {
 
         List<String> lores = getLore(itemstack);
         lores.add(lore);
@@ -46,13 +48,16 @@ public class Itemf {
         meta.setLore(lores);
         itemstack.setItemMeta(meta);
 
+        return itemstack;
     }
 
-    public static void setLore(ItemStack itemstack, String... lores) {
+    public static ItemStack setLore(ItemStack itemstack, String... lores) {
 
         ItemMeta meta = itemstack.getItemMeta();
         meta.setLore(Arrays.asList(lores));
         itemstack.setItemMeta(meta);
+
+        return itemstack;
 
     }
 
@@ -64,11 +69,11 @@ public class Itemf {
 
         return lores == null ? new ArrayList<>() : new ArrayList<>( lores );
     }
-    public static void removeLore(ItemStack itemstack, int index) {
+    public static ItemStack removeLore(ItemStack itemstack, int index) {
         ItemMeta meta       = itemstack.getItemMeta();
 
         if(meta == null)
-            return;
+            return itemstack;
 
         List<String> lore   = meta.getLore();
 
@@ -78,12 +83,16 @@ public class Itemf {
         meta.setLore( lore );
 
         itemstack.setItemMeta(meta);
+
+        return itemstack;
     }
 
-    public static void setCustomModelData(ItemStack itemstack, int customModelData) {
+    public static ItemStack setCustomModelData(ItemStack itemstack, int customModelData) {
         ItemMeta meta = itemstack.getItemMeta();
         meta.setCustomModelData(customModelData);
         itemstack.setItemMeta(meta);
+
+        return itemstack;
 
     }
 

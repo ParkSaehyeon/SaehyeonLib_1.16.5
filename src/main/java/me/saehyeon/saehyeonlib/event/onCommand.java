@@ -64,7 +64,7 @@ public class onCommand implements CommandExecutor {
 
                     sender.sendMessage("");
                     sender.sendMessage(p.getName()+"에 대한 정보:");
-                    sender.sendMessage("적용 중인 역할: "+ Role.findByPlayer(p));
+                    sender.sendMessage("적용 중인 역할: "+ Role.getByPlayer(p));
                     sender.sendMessage("적용 중인 쿨타임: "+CoolTime.findByPlayer(p));
                     sender.sendMessage("예외 플레이언가?: "+ ExPlayer.contains(p));
                     sender.sendMessage("현재 보고 있는 GUI 종류: "+GUI.getType(p));
@@ -464,7 +464,7 @@ public class onCommand implements CommandExecutor {
                                     p.sendMessage("");
                                     p.sendMessage("§7"+target.getName()+"§f의 역할은 다음과 같습니다:");
 
-                                    Role role = Role.findByPlayer(target);
+                                    Role role = Role.getByPlayer(target);
 
                                     if(role != null) {
                                         p.sendMessage(" - 이름: "+role.getName()+" | 배정되어야 하는 인원 수: "+role.getNeedPeopleAmount()+" | 현재 인원 수: "+role.getPlayers().size()+"명");
@@ -494,7 +494,7 @@ public class onCommand implements CommandExecutor {
 
                                 if(target != null) {
 
-                                    Role role = Role.findByName(args[3]);
+                                    Role role = Role.getByName(args[3]);
 
                                     if(role != null) {
 
@@ -521,7 +521,7 @@ public class onCommand implements CommandExecutor {
 
                                 if(target != null) {
 
-                                    Role role = Role.findByName(args[3]);
+                                    Role role = Role.getByName(args[3]);
 
                                     if(role != null && role.getPlayers().contains(target)) {
 
