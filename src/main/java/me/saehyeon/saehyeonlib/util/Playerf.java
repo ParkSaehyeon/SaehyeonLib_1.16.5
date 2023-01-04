@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -124,4 +126,22 @@ public class Playerf {
         }
 
     }
+
+    public static void sendTitle(List<Player> players, String title, String subtitle, int fadein, int stay, int fadeout) {
+        players.forEach(p -> p.sendTitle(title,subtitle,fadein,stay,fadeout));
+    }
+
+    public static void sendTitle(List<Player> players, String title, String subtitle) {
+        players.forEach(p -> p.sendTitle(title,subtitle));
+    }
+
+    public static void sendTitleAll(String title, String subtitle, int fadein, int stay, int fadeout) {
+        sendTitle(new ArrayList<>( Bukkit.getOnlinePlayers() ),title,subtitle,fadein, stay, fadeout);
+    }
+
+    public static void sendTitleAll(String title, String subtitle) {
+        sendTitle(new ArrayList<>( Bukkit.getOnlinePlayers() ),title,subtitle);
+    }
+
+
 }

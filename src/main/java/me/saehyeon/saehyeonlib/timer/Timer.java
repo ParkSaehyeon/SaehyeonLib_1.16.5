@@ -8,6 +8,8 @@ import me.saehyeon.saehyeonlib.timer.event.TimerProgressEvent;
 import me.saehyeon.saehyeonlib.timer.event.TimerStartEvent;
 import me.saehyeon.saehyeonlib.timer.event.TimerStopEvent;
 import me.saehyeon.saehyeonlib.util.BukkitTaskf;
+import me.saehyeon.saehyeonlib.util.Playerf;
+import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -184,11 +186,19 @@ public class Timer {
         return new int[] { hour, min, curSec };
     }
 
-    public static void countDown(int second, Callback whenProgress, Callback whenEnd) {
+    public static void countDown(int second, Callback whenEnd) {
         for(int i = second; i > 0; i--) {
 
+            final int finalI = i;
 
-            whenProgress.callInProgress(i);
+            Bukkit.getScheduler().runTaskLater(SaehyeonLib.instance, () -> {
+
+                Playerf.sendTitleAll("§l"+(3-finalI),"");
+
+            }, 20L *i);
+
         }
+
+        Bukkit.getScheduler().runTaskLater(SaehyeonLib.instance, whenEnd::call,20*second);
     }
 }
