@@ -89,6 +89,6 @@ public class GUI {
     }
 
     public static boolean isOpen(Player player) {
-        return seeingGUI.containsKey(player.getUniqueId());
+        return inv.containsKey(player.getUniqueId());
     }
 }
