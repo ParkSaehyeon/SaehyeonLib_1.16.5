@@ -9,4 +9,6 @@ public class TimerProgressEvent {
     public TimerProgressEvent(Timer timer) {
         this.timer = timer;
     }
+    public Timer getTimer() { return timer; }
+
 }

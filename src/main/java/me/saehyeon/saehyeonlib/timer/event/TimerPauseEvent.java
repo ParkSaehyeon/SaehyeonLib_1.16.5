@@ -9,4 +9,5 @@ public class TimerPauseEvent {
     public TimerPauseEvent(Timer timer) {
         this.timer = timer;
     }
+    public Timer getTimer() { return timer; }
 }

@@ -9,4 +9,6 @@ public class TimerStartEvent {
     public TimerStartEvent(Timer timer) {
         this.timer = timer;
     }
+
+    public Timer getTimer() { return timer; }
 }

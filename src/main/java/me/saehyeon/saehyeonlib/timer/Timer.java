@@ -17,9 +17,9 @@ import java.util.ArrayList;
 
 public class Timer {
 
+    @FunctionalInterface
     public interface Callback {
         void call();
-        void callInProgress(int leftTime);
     }
     static ArrayList<Timer> timerInfos = new ArrayList<>();
 

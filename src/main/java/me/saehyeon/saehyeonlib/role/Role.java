@@ -8,10 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * <h2>역할 시스템</h2>
@@ -204,6 +201,10 @@ public class Role {
         return team.getSuffix();
     }
 
+    public void ignoreWhenRandomApply(boolean ignore) {
+
+    }
+
     /**
      * 특정 이름을 가진 역할을 반환합니다.<br>
      * 등록되어 있지 않은 역할은 찾을 수 없습니다.
@@ -235,15 +236,22 @@ public class Role {
      * <i>만약 지정된 플레이어들의 수가 배정되어야 하는 사람의 수보다 적다면, 오류 메세지가 뜰 것 입니다.</i>
      * @param players 역할이 배정될 플레이어들
      * @param callback 역할 배정 완료 시 호출될 callback 함수
+     * @param ignoredRoles 역할을 랜덤배정하지 않을 플레이어
      */
-    public static void applyRandom(List<Player> players, RoleCallback callback) {
+    public static void applyRandom(List<Player> players, RoleCallback callback, Role... ignoredRoles) {
+
 
         // 먼저 플레이어들의 역할 없애기
         players.forEach(Role::removeIfHas);
 
+        ArrayList<Role> _roles = (ArrayList<Role>) roles.clone();
+
+        // 랜덤 배정하지 않기로 한 역할은 제외 시키기
+        _roles.removeIf(role -> Arrays.asList(ignoredRoles).contains(role));
+
         // 배정 인원이 정해진 역할들과 그렇지 않은 역할들을 나누기
-        ArrayList<Role> needPeopleRoles     = (ArrayList<Role>) roles.clone();
-        ArrayList<Role> notNeedPeopleRoles  = (ArrayList<Role>) roles.clone();
+        ArrayList<Role> needPeopleRoles     = (ArrayList<Role>) _roles.clone();
+        ArrayList<Role> notNeedPeopleRoles  = (ArrayList<Role>) _roles.clone();
 
         needPeopleRoles.removeIf(role -> role.needPeople == 0);
         notNeedPeopleRoles.removeIf(role -> role.needPeople != 0);
