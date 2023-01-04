@@ -42,7 +42,7 @@ public class Itemf {
 
     public static ItemStack addLore(ItemStack itemstack, String lore) {
 
-        List<String> lores = getLore(itemstack);
+        List<String> lores = new ArrayList<>( getLore(itemstack) );
         lores.add(lore);
 
         ItemMeta meta = itemstack.getItemMeta();

@@ -46,6 +46,10 @@ public class Timer {
 
         // 보스바를 모두에게 띄우기
         Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
+
+        // 보스바 초기 타이틀을 저장하기
+        final String bossBarTitle = bossBar.getTitle();
+
         leftTime = seconds;
 
         bukkitTask = BukkitTaskf.timer(() -> {
@@ -60,15 +64,16 @@ public class Timer {
                     // 보스바 타이틀 제목 변경
                     int[] hms = getHourMinSecFromSeconds(leftTime);
 
+
                     // 약속된 문자열을 시,분,초로 치환
-                    String bossBarTitle = bossBar.getTitle().replace("{hour}", hms[0]+"")
+                    String _title = bossBarTitle.replace("{hour}", hms[0]+"")
                             .replace("{minute}",hms[1]+"")
                             .replace("{second}",hms[2]+"")
                             .replace("{h}",hms[0]+"")
                             .replace("{m}",hms[1]+"")
                             .replace("{s}",hms[2]+"");
 
-                    bossBar.setTitle(bossBarTitle);
+                    bossBar.setTitle(_title);
 
                     // 보스바 감소
                     if (totalProgress >= 0)
@@ -135,6 +140,10 @@ public class Timer {
 
     public boolean isPaused() {
         return pause;
+    }
+
+    public BossBar getBossBar() {
+        return bossBar;
     }
 
     public static void StartTimer(String timerName, BossBar bossBar, int seconds) {
@@ -212,6 +221,10 @@ public class Timer {
             whenEnd.call();
             Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,2f));
 
-        },20*second);
+        },20*second+1);
+    }
+
+    public static ArrayList<Timer> getTimers() {
+        return new ArrayList<>(timerInfos);
     }
 }

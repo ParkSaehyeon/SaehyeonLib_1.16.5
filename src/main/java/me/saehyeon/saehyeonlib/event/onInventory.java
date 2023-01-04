@@ -35,7 +35,7 @@ public class onInventory implements Listener {
             SaehyeonLibEvent.doEvent(new GUIClickEvent(p,e.getCurrentItem()));
 
             // GUI 아이템 클릭이 금지되어 있으면 이벤트 취소
-            if(GUI.containsRule(p, GUIRule.CANT_ITEM_CLICK)) {
+            if(GUI.getRules(p).contains(GUIRule.CANT_ITEM_CLICK)) {
                 e.setCancelled(true);
                 return;
             }
@@ -128,10 +128,12 @@ public class onInventory implements Listener {
     void onInventoryClose(InventoryCloseEvent e) {
         Player p = (Player)e.getPlayer();
 
+        Bukkit.broadcastMessage("인벤토리 닫아짐");
+
         if(GUI.isOpen(p)) {
 
             // GUI가 닫을 수 없게 설정되어 있음
-            if(GUI.containsRule(p, GUIRule.CANT_CLOSE)) {
+            if(GUI.getRules(p).contains(GUIRule.CANT_CLOSE)) {
 
                 Inventory inv = p.getOpenInventory().getTopInventory();
 

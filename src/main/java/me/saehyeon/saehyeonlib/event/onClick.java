@@ -2,6 +2,7 @@ package me.saehyeon.saehyeonlib.event;
 
 import me.saehyeon.saehyeonlib.shop.Shop;
 import me.saehyeon.saehyeonlib.state.PlayerState;
+import me.saehyeon.saehyeonlib.util.BukkitTaskf;
 import me.saehyeon.saehyeonlib.util.Playerf;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,24 +12,40 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.bukkit.Bukkit.getServer;
 
 public class onClick implements Listener {
 
+    ArrayList<Player> cool = new ArrayList<>();
+
     @EventHandler
-    void onClickShopNPC(PlayerInteractAtEntityEvent e) {
+    void onClickShopNPC(PlayerInteractEntityEvent e) {
         Player p = e.getPlayer();
-        Entity clickedEn = e.getRightClicked();
 
-        Shop shop = Shop.getByNPCName(clickedEn.getName());
+        if(!cool.contains(p)) {
 
-        if(shop != null) {
+            cool.add(p);
 
-            // 상점 GUI 열기
-            shop.openGUI(p);
+            Entity clickedEn = e.getRightClicked();
 
+            Shop shop = Shop.getByNPCName(clickedEn.getName());
+
+            if (shop != null) {
+
+                // 상점 GUI 열기
+                shop.openGUI(p);
+
+            }
+
+            BukkitTaskf.wait(() -> {
+                cool.remove(p);
+            },2);
         }
     }
 

@@ -12,6 +12,7 @@ import me.saehyeon.saehyeonlib.region.Region;
 import me.saehyeon.saehyeonlib.role.ExPlayer;
 import me.saehyeon.saehyeonlib.role.Role;
 import me.saehyeon.saehyeonlib.state.State;
+import me.saehyeon.saehyeonlib.timer.Timer;
 import me.saehyeon.saehyeonlib.util.Itemf;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.util.Playerf;
@@ -19,6 +20,9 @@ import me.saehyeon.saehyeonlib.util.Stringf;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -627,6 +631,15 @@ public class onCommand implements CommandExecutor {
                             p.sendMessage("§c사용법: /s-lib [드롭] [아이템설정/횟수설정/주기설정/목록]");
                             break;
                     }
+                    break;
+
+                case "tt":
+
+                    BossBar bossBar = Bukkit.createBossBar("§f§l남은 시간 {h}:{m}:{s}", BarColor.WHITE, BarStyle.SOLID);
+
+                    Timer.StartTimer("king",bossBar,3600);
+
+
                     break;
             }
         }

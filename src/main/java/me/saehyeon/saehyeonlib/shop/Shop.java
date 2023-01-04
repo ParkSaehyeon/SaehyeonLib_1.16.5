@@ -7,7 +7,9 @@ import me.saehyeon.saehyeonlib.main.SaehyeonLibEvent;
 import me.saehyeon.saehyeonlib.shop.event.ShopOpenEvent;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.util.Filef;
+import me.saehyeon.saehyeonlib.util.Itemf;
 import me.saehyeon.saehyeonlib.util.Serialize;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -67,7 +69,9 @@ public class Shop implements Serializable {
     }
 
     public Shop addGUIItem(ItemStack itemstack, int slot) {
+
         guiItems.put(slot,itemstack);
+
         return this;
     }
 
@@ -104,7 +108,9 @@ public class Shop implements Serializable {
         GUI.open(player,guiTitle,guiRows,GUIType.SHOP);
         GUI.setRule(player, GUIRule.CANT_ITEM_CLICK);
 
-        guiItems.forEach((key, value) -> GUI.setItem(player,key,value));
+        guiItems.forEach((key, value) -> {
+            GUI.setItem(player,key,value);
+        });
 
         // 현재 플레이어가 보고 있는 상점을 저장
         PlayerState.set(player, "currentShop",this);
@@ -128,8 +134,12 @@ public class Shop implements Serializable {
 
     public static Shop getByNPCName(String name) {
         for(Shop shop : shops) {
-            if(shop.getNPCNames().contains(name))
+
+            if(shop.getNPCNames().contains(name)) {
+
                 return shop;
+
+            }
         }
 
         return null;

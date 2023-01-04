@@ -2,6 +2,7 @@ package me.saehyeon.saehyeonlib.main;
 
 import me.saehyeon.saehyeonlib.dropitem.DropItemGUIEvent;
 import me.saehyeon.saehyeonlib.event.onClick;
+import me.saehyeon.saehyeonlib.event.onJoin;
 import me.saehyeon.saehyeonlib.itemplacer.ItemPlacerGUIEvent;
 import me.saehyeon.saehyeonlib.event.onCommand;
 import me.saehyeon.saehyeonlib.event.onInventory;
@@ -9,6 +10,7 @@ import me.saehyeon.saehyeonlib.region.Region;
 import me.saehyeon.saehyeonlib.role.ExPlayer;
 import me.saehyeon.saehyeonlib.role.Role;
 import me.saehyeon.saehyeonlib.shop.Shop;
+import me.saehyeon.saehyeonlib.shop.ShopGUIEvent;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.state.State;
 import me.saehyeon.saehyeonlib.util.Stringf;
@@ -35,9 +37,11 @@ public final class SaehyeonLib extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new onInventory(), this);
         Bukkit.getPluginManager().registerEvents(new onClick(), this);
+        Bukkit.getPluginManager().registerEvents(new onJoin(), this);
 
         SaehyeonLibEvent.register(new ItemPlacerGUIEvent());
         SaehyeonLibEvent.register(new DropItemGUIEvent());
+        SaehyeonLibEvent.register(new ShopGUIEvent());
 
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 

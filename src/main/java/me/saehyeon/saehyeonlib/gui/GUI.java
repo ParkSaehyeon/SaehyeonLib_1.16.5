@@ -68,17 +68,11 @@ public class GUI {
     }
 
     public static void setRule(Player player, GUIRule... rule) {
-        if(!containsRule(player,rule))
-            getRules(player).addAll(Arrays.asList(rule));
+        appliedRules.put(player.getUniqueId(), new ArrayList<>( Arrays.asList(rule) ));
     }
 
     public static void removeRule(Player player, GUIRule rule) {
-        if(containsRule(player,rule))
-            getRules(player).remove(rule);
-    }
-
-    public static boolean containsRule(Player player, GUIRule... rule) {
-        return getRules(player).containsAll(Arrays.asList(rule));
+        getRules(player).remove(rule);
     }
 
     public static ArrayList<GUIRule> getRules(Player player) {

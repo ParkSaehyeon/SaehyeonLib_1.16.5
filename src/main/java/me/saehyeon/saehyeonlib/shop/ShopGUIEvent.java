@@ -8,6 +8,7 @@ import me.saehyeon.saehyeonlib.shop.event.ShopClickItemEvent;
 import me.saehyeon.saehyeonlib.shop.event.ShopCloseEvent;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.util.Itemf;
+import org.bukkit.Bukkit;
 
 public class ShopGUIEvent implements SaehyeonLibListener {
 
@@ -28,6 +29,8 @@ public class ShopGUIEvent implements SaehyeonLibListener {
     }
 
     void onClose(GUICloseEvent e) {
+
+        Bukkit.broadcastMessage("GUI 닫힘");
 
         // 상점이 닫힘
         if(e.getGUIType() != null && e.getGUIType() == GUIType.SHOP) {
