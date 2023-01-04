@@ -128,8 +128,6 @@ public class onInventory implements Listener {
     void onInventoryClose(InventoryCloseEvent e) {
         Player p = (Player)e.getPlayer();
 
-        Bukkit.broadcastMessage("인벤토리 닫아짐");
-
         if(GUI.isOpen(p)) {
 
             // GUI가 닫을 수 없게 설정되어 있음

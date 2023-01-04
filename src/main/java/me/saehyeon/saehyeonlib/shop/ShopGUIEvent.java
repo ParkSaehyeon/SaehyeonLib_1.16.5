@@ -30,8 +30,6 @@ public class ShopGUIEvent implements SaehyeonLibListener {
 
     void onClose(GUICloseEvent e) {
 
-        Bukkit.broadcastMessage("GUI 닫힘");
-
         // 상점이 닫힘
         if(e.getGUIType() != null && e.getGUIType() == GUIType.SHOP) {
 
