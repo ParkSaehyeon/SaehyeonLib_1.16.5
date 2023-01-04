@@ -2,6 +2,7 @@ package me.saehyeon.saehyeonlib.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,6 +52,10 @@ public class Itemf {
         return itemstack;
     }
 
+    public static String getDisplayName(ItemStack itemStack) {
+        return itemStack != null && itemStack.getItemMeta() != null ? itemStack.getItemMeta().getDisplayName() : "";
+    }
+
     public static ItemStack setLore(ItemStack itemstack, String... lores) {
 
         ItemMeta meta = itemstack.getItemMeta();
@@ -62,7 +67,8 @@ public class Itemf {
     }
 
     public static List<String> getLore(ItemStack itemstack) {
-        if(itemstack.getItemMeta() == null)
+
+        if(itemstack == null || itemstack.getItemMeta() == null)
             return new ArrayList<>();
 
         List<String> lores = itemstack.getItemMeta().getLore();
@@ -100,6 +106,19 @@ public class Itemf {
 
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         return Bukkit.getUnsafe().modifyItemStack(skull, "{SkullOwner:\""+playerName+"\"}");
+    }
+
+    public static void clearDroppedItems() {
+
+        Bukkit.getWorlds().forEach(world -> {
+
+            world.getEntities().forEach(en -> {
+                if(en instanceof Item)
+                    en.remove();
+            });
+
+        });
+
     }
 
 }

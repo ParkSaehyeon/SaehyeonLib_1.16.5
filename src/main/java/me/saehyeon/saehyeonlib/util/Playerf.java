@@ -144,5 +144,42 @@ public class Playerf {
         sendTitle(new ArrayList<>( Bukkit.getOnlinePlayers() ),title,subtitle);
     }
 
+    public static boolean removeItemByName(Player player, String displayName, int amount) {
 
+        int removedAmount = 0;
+
+        for(ItemStack item : player.getInventory().getContents()) {
+
+            if(Itemf.getDisplayName(item).equals(displayName)) {
+
+                int itemAmount = item.getAmount();
+
+                if(itemAmount+removedAmount >= amount) {
+
+                    item.setAmount( (itemAmount+removedAmount) - amount );
+                    return true;
+
+                }
+
+                removedAmount += item.getAmount();
+                player.getInventory().remove(item);
+
+            }
+
+        }
+
+        return removedAmount == amount;
+
+    }
+
+    public static boolean removeItemByName(Player player, String displayName) {
+        for(ItemStack item : player.getInventory().getContents()) {
+            if(Itemf.getDisplayName(item).equals(displayName)) {
+                player.getInventory().remove(item);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

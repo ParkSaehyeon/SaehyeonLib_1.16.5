@@ -230,6 +230,10 @@ public class CoolTime {
         return cooltimeMap.getOrDefault(player.getUniqueId(), new ArrayList<>()).contains(cooltime);
     }
 
+    public static boolean contains(Player player, String cooltimeName) {
+        return findByName(player,cooltimeName) != null;
+    }
+
     /**
      * 특정 플레이어가 가지고 있는 특정 이름의 쿨타임을 반환합니다.
      * @param player

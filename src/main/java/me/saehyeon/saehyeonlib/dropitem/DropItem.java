@@ -10,6 +10,7 @@ import me.saehyeon.saehyeonlib.util.Locationf;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -74,13 +75,26 @@ public class DropItem implements Serializable {
         return isDropping;
     }
 
-    public void StartDrop() {
+    public void StartDrop(boolean removeDroppedItems) {
 
         if(isDropping)
             StopDrop();
 
         SaehyeonLibEvent.doEvent(new ItemDropStartEvent(region));
 
+        // 땅 바닥에 있는 아이템 치우기
+        if(removeDroppedItems) {
+
+            Bukkit.getWorlds().forEach(world -> {
+
+                world.getEntities().forEach(en -> {
+                    if(en instanceof Item)
+                        en.remove();
+                });
+
+            });
+
+        }
         isDropping = true;
 
         Location pos1 = region.getPosition()[0];

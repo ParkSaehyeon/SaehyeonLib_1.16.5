@@ -24,7 +24,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -82,14 +81,7 @@ public class onCommand implements CommandExecutor {
                             if(!sender.hasPermission("saehyeonlib.item.clean"))
                                 return SaehyeonLib.sendError(p, ErrorMessage.NO_PERMISSION);
 
-                            Bukkit.getWorlds().forEach(world -> {
-
-                                world.getEntities().forEach(en -> {
-                                    if(en instanceof Item)
-                                        en.remove();
-                                });
-
-                            });
+                            Itemf.clearDroppedItems();
 
                             break;
 
@@ -558,7 +550,13 @@ public class onCommand implements CommandExecutor {
                             if(targetRegion == null)
                                 return SaehyeonLib.sendError(p, ErrorMessage.REGION_NOT_EXIST);
 
-                            targetRegion.getDropItem().StartDrop();
+                            if(args.length < 3) {
+                                p.sendMessage("§c아이템을 떨구기 전, 땅에 떨어진 아이템을 청소하고 진행할 것 인지 결정해야 합니다.");
+                                p.sendMessage("§c사용법: /s-lib 드롭 시작 [지역이름] [true/false]");
+                                return false;
+                            }
+
+                            targetRegion.getDropItem().StartDrop(Boolean.parseBoolean(args[2]));
 
                             p.sendMessage("§7"+targetRegion.getName()+"§f 지역에 아이템 드롭을 시작했습니다. §7(주기: "+targetRegion.getDropItem().getDropPriod()+"초, 횟수: "+targetRegion.getDropItem().getDropTime()+"번)");
                             break;
@@ -618,7 +616,7 @@ public class onCommand implements CommandExecutor {
                                 long dropPriod  = region.getDropItem().getDropPriod();
                                 int dropTime    = region.getDropItem().getDropTime();
 
-                                finalP.sendMessage(" - 지역이름: "+rName+" / 범위: "+Stringf.toLocationStr(pos1)+"~"+Stringf.toLocationStr(pos2)+" / 드롭할 아이템 수(슬롯 수): "+itemAmount+" / 드롭 주기: "+dropPriod+"초 / 드롭 횟수: "+dropTime+"번");
+                                finalP.sendMessage(" - 지역이름: "+rName+" | 범위: "+Stringf.toLocationStr(pos1)+"~"+Stringf.toLocationStr(pos2)+" | 드롭할 아이템 수(슬롯 수): "+itemAmount+" | 드롭 주기: "+dropPriod+"초 | 드롭 횟수: "+dropTime+"번 | 아이템을 드롭중인가?: "+(region.getDropItem().isDropping() ? "네" : "아니요"));
 
                             });
 
