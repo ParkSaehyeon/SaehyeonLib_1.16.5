@@ -29,7 +29,7 @@ public class ItemPlacerGUI {
         switch (guiType) {
             case ITEM_SETTING:
 
-                GUI.open(player,6,region.getName()+" 지역의 상자에 숨길 아이템들");
+                GUI.open(player,region.getName()+" 지역의 상자에 숨길 아이템들",6);
 
                 // 아이템 불러오기
                 BukkitTaskf.wait(() -> {

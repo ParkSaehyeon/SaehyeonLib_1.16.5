@@ -1,18 +1,37 @@
 package me.saehyeon.saehyeonlib.event;
 
+import me.saehyeon.saehyeonlib.shop.Shop;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.util.Playerf;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import static org.bukkit.Bukkit.getServer;
 
 public class onClick implements Listener {
+
+    @EventHandler
+    void onClickShopNPC(PlayerInteractAtEntityEvent e) {
+        Player p = e.getPlayer();
+        Entity clickedEn = e.getRightClicked();
+
+        Shop shop = Shop.getByNPCName(clickedEn.getName());
+
+        if(shop != null) {
+
+            // 상점 GUI 열기
+            shop.openGUI(p);
+
+        }
+    }
+
     @EventHandler
     void onClick(PlayerInteractEvent e) {
         Player p = e.getPlayer();

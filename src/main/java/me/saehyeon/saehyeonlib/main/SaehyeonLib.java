@@ -8,6 +8,7 @@ import me.saehyeon.saehyeonlib.event.onInventory;
 import me.saehyeon.saehyeonlib.region.Region;
 import me.saehyeon.saehyeonlib.role.ExPlayer;
 import me.saehyeon.saehyeonlib.role.Role;
+import me.saehyeon.saehyeonlib.shop.Shop;
 import me.saehyeon.saehyeonlib.state.PlayerState;
 import me.saehyeon.saehyeonlib.state.State;
 import me.saehyeon.saehyeonlib.util.Stringf;
@@ -44,6 +45,7 @@ public final class SaehyeonLib extends JavaPlugin {
 
         ExPlayer.load();
         Region.load();
+        Shop.load();
         new PlayerState().load();
         new State().load();
     }
@@ -53,6 +55,7 @@ public final class SaehyeonLib extends JavaPlugin {
 
         ExPlayer.save();
         Region.save();
+        Shop.save();
         new PlayerState().save();
         new State().save();
 

@@ -479,7 +479,7 @@ public class onCommand implements CommandExecutor {
 
                             break;
 
-                        case "추가":
+                        case "설정":
                             if(args.length >= 4) {
 
                                 Player target = Bukkit.getPlayer(args[2]);

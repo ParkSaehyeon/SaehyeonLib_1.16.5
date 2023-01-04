@@ -9,7 +9,7 @@ public class ItemPlacerGUIEvent implements SaehyeonLibListener {
 
     void onClose(GUICloseEvent e) {
 
-        if (e.getGUIType().equals(GUIType.ITEM_SETTING)) {
+        if (e.getGUIType() != null && e.getGUIType().equals(GUIType.ITEM_SETTING)) {
 
             // 아이템 설정 저장
             new ItemPlacerGUI().saveItemSetting(e.getPlayer(), (Region)PlayerState.get(e.getPlayer(), "selectedRegion"));

@@ -10,6 +10,8 @@ import me.saehyeon.saehyeonlib.timer.event.TimerStopEvent;
 import me.saehyeon.saehyeonlib.util.BukkitTaskf;
 import me.saehyeon.saehyeonlib.util.Playerf;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -42,6 +44,8 @@ public class Timer {
         if(bossBar != null)
             bossBar.setProgress(1);
 
+        // 보스바를 모두에게 띄우기
+        Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
         leftTime = seconds;
 
         bukkitTask = BukkitTaskf.timer(() -> {
@@ -175,30 +179,39 @@ public class Timer {
 
         int curSec = seconds;
 
-        int hour = seconds / 3600;
+        int hour = curSec / 3600;
 
-        curSec -= seconds/ 3600;
+        curSec -= hour*3600;
 
-        int min = seconds / 60;
+        int min = curSec / 60;
 
-        curSec -= min;
+        curSec -= min*60;
 
         return new int[] { hour, min, curSec };
     }
 
     public static void countDown(int second, Callback whenEnd) {
+
+        Playerf.sendTitleAll("","§l"+second,0,20,0);
+        Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,1f));
+
         for(int i = second; i > 0; i--) {
 
             final int finalI = i;
 
             Bukkit.getScheduler().runTaskLater(SaehyeonLib.instance, () -> {
 
-                Playerf.sendTitleAll("§l"+(3-finalI),"");
-
+                Playerf.sendTitleAll("","§l"+(second-finalI),0,20,0);
+                Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,1f));
             }, 20L *i);
 
         }
 
-        Bukkit.getScheduler().runTaskLater(SaehyeonLib.instance, whenEnd::call,20*second);
+        Bukkit.getScheduler().runTaskLater(SaehyeonLib.instance, () -> {
+
+            whenEnd.call();
+            Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,2f));
+
+        },20*second);
     }
 }

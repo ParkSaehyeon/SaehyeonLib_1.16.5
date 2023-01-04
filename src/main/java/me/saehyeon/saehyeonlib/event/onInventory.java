@@ -1,5 +1,6 @@
 package me.saehyeon.saehyeonlib.event;
 
+import me.saehyeon.saehyeonlib.gui.event.GUIClickEvent;
 import me.saehyeon.saehyeonlib.gui.event.GUICloseEvent;
 import me.saehyeon.saehyeonlib.gui.event.GUIOpenEvent;
 import me.saehyeon.saehyeonlib.itemplacer.GUIType;
@@ -29,6 +30,9 @@ public class onInventory implements Listener {
         Player p = (Player)e.getWhoClicked();
 
         if(GUI.isOpen(p)) {
+
+            // 클릭했다는 이벤트 발동
+            SaehyeonLibEvent.doEvent(new GUIClickEvent(p,e.getCurrentItem()));
 
             // GUI 아이템 클릭이 금지되어 있으면 이벤트 취소
             if(GUI.containsRule(p, GUIRule.CANT_ITEM_CLICK)) {

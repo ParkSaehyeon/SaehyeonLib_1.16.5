@@ -56,6 +56,12 @@ public class Role {
         team = SaehyeonLib.scoreboard.registerNewTeam(name);
     }
 
+    public Role(String name, String prefix, int needPeople) {
+        this.name = name;
+        this.needPeople = needPeople;
+        team = SaehyeonLib.scoreboard.registerNewTeam(name);
+    }
+
     /**
      * 이 역할이 배정되어야 할 인원 수를 설정합니다.<br>
      * @param amount 0 이상의 자연수만약 <b>매개변수가 0이라면 설정하지 않는 것입니다.</b>applyRandom 메소드로 사람들에게 역할을 랜덤 배정할 때, 이 값이 0이 아닌 역할이 먼저 배정됩니다.
@@ -258,14 +264,19 @@ public class Role {
 
         // 배정 인원이 정해진 역할들과 그렇지 않은 역할들을 나누기
         ArrayList<Role> needPeopleRoles     = (ArrayList<Role>) _roles.clone();
+
+        // 인원 수가 정해진 역할들의 모든 필수 인원 수를 합하기
+        int needPeople = 0;
+
+        for(Role role : needPeopleRoles)
+            needPeople += role.getNeedPeopleAmount();
+
         ArrayList<Role> notNeedPeopleRoles  = (ArrayList<Role>) _roles.clone();
 
         needPeopleRoles.removeIf(role -> role.needPeople == 0);
         notNeedPeopleRoles.removeIf(role -> role.needPeople != 0);
 
-        // 역할을 배정받아야 하는 인원 수가 충분한지 확인
-        int needPeople = needPeopleRoles.size();
-
+        // 필수 인원 수가 충분한지 확인
         if(players.size() < needPeople) {
             Bukkit.broadcastMessage("§c역할 랜덤 배정이 불가합니다. ("+needPeople+"명이 필요§c하지만 현재 역할 배정 대상은 "+players.size()+"명입니다.)");
             return;
@@ -380,6 +391,15 @@ public class Role {
 
         if(role != null)
             role.remove(player);
+    }
+
+    public static Role createRole(String name, String prefix, int needPeople) {
+
+        Role role = new Role(name, prefix,needPeople);
+        role.register();
+
+        return role;
+
     }
 
 }

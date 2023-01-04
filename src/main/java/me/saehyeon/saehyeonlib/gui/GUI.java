@@ -2,15 +2,11 @@ package me.saehyeon.saehyeonlib.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GUI {
 
@@ -34,13 +30,13 @@ public class GUI {
     }
 
 
-    public static void open(Player player, int rows, String title) {
+    public static void open(Player player, String title, int rows) {
         inv.put(player.getUniqueId(), Bukkit.createInventory(null, rows*9, title));
         player.openInventory(inv.get(player.getUniqueId()));
     }
 
     public static void open(List<Player> players, int rows, String title) {
-        players.forEach(p -> open(p, rows, title));
+        players.forEach(p -> open(p, title, rows));
     }
 
     public static void close(Player player) {
@@ -51,10 +47,11 @@ public class GUI {
     public static void init(Player player) {
         inv.remove(player.getUniqueId());
         seeingGUI.remove(player.getUniqueId());
+        appliedRules.remove(player.getUniqueId());
     }
 
     public static void close(List<Player> players) {
-        players.forEach(HumanEntity::closeInventory);
+        players.forEach(GUI::close);
     }
 
     public static void clear(Player player) {
@@ -70,9 +67,9 @@ public class GUI {
         player.getOpenInventory().getTopInventory().setItem(slot, item);
     }
 
-    public static void addRule(Player player, GUIRule rule) {
+    public static void setRule(Player player, GUIRule... rule) {
         if(!containsRule(player,rule))
-            getRules(player).add(rule);
+            getRules(player).addAll(Arrays.asList(rule));
     }
 
     public static void removeRule(Player player, GUIRule rule) {
@@ -80,8 +77,8 @@ public class GUI {
             getRules(player).remove(rule);
     }
 
-    public static boolean containsRule(Player player, GUIRule rule) {
-        return getRules(player).contains(rule);
+    public static boolean containsRule(Player player, GUIRule... rule) {
+        return getRules(player).containsAll(Arrays.asList(rule));
     }
 
     public static ArrayList<GUIRule> getRules(Player player) {
