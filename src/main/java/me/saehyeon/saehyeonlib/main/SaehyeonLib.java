@@ -49,7 +49,6 @@ public final class SaehyeonLib extends JavaPlugin {
 
         ExPlayer.load();
         Region.load();
-        Shop.load();
         new PlayerState().load();
         new State().load();
     }
@@ -59,7 +58,6 @@ public final class SaehyeonLib extends JavaPlugin {
 
         ExPlayer.save();
         Region.save();
-        Shop.save();
         new PlayerState().save();
         new State().save();
 

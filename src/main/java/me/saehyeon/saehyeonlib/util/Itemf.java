@@ -40,10 +40,10 @@ public class Itemf {
         return itemstack;
     }
 
-    public static ItemStack addLore(ItemStack itemstack, String lore) {
+    public static ItemStack addLore(ItemStack itemstack, String... lore) {
 
         List<String> lores = new ArrayList<>( getLore(itemstack) );
-        lores.add(lore);
+        lores.addAll(Arrays.asList(lore));
 
         ItemMeta meta = itemstack.getItemMeta();
         meta.setLore(lores);

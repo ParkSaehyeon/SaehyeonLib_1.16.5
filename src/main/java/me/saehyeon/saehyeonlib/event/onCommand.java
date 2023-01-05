@@ -11,6 +11,7 @@ import me.saehyeon.saehyeonlib.main.SaehyeonLib;
 import me.saehyeon.saehyeonlib.region.Region;
 import me.saehyeon.saehyeonlib.role.ExPlayer;
 import me.saehyeon.saehyeonlib.role.Role;
+import me.saehyeon.saehyeonlib.shop.Shop;
 import me.saehyeon.saehyeonlib.state.State;
 import me.saehyeon.saehyeonlib.timer.Timer;
 import me.saehyeon.saehyeonlib.util.Itemf;
@@ -633,12 +634,9 @@ public class onCommand implements CommandExecutor {
                     }
                     break;
 
-                case "tt":
+                case "t":
 
-                    BossBar bossBar = Bukkit.createBossBar("§f§l남은 시간 {h}:{m}:{s}", BarColor.WHITE, BarStyle.SOLID);
-
-                    Timer.StartTimer("king",bossBar,3600);
-
+                    Playerf.removeItem(p, "§6옆전",10);
 
                     break;
             }

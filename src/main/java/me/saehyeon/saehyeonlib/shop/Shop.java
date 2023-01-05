@@ -123,6 +123,9 @@ public class Shop implements Serializable {
             shops.add(this);
     }
 
+    public HashMap<Integer, ItemStack> getGUIItems() {
+        return guiItems;
+    }
     public static Shop getByName(String name) {
         for(Shop shop : shops) {
             if(shop.getName().equals(name))
@@ -143,13 +146,5 @@ public class Shop implements Serializable {
         }
 
         return null;
-    }
-
-    public static void save() {
-        Filef.write(SaehyeonLib.instance.getDataFolder()+"\\shops.json", Serialize.serialize(shops));
-    }
-
-    public static void load() {
-        shops = (ArrayList<Shop>) Serialize.deSerialize( Filef.read(SaehyeonLib.instance.getDataFolder()+"\\shops.json").get(0) );
     }
 }

@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -144,7 +145,7 @@ public class Playerf {
         sendTitle(new ArrayList<>( Bukkit.getOnlinePlayers() ),title,subtitle);
     }
 
-    public static boolean removeItemByName(Player player, String displayName, int amount) {
+    public static boolean removeItem(Player player, String displayName, int amount) {
 
         int removedAmount = 0;
 
@@ -161,8 +162,38 @@ public class Playerf {
 
                 }
 
-                removedAmount += item.getAmount();
-                player.getInventory().remove(item);
+                removedAmount += itemAmount;
+
+                item.setAmount(0);
+
+            }
+
+        }
+
+        return removedAmount == amount;
+
+    }
+
+    public static boolean removeItem(Player player, Material material, int amount) {
+
+        int removedAmount = 0;
+
+        for(ItemStack item : player.getInventory().getContents()) {
+
+            if(item.getType() == material) {
+
+                int itemAmount = item.getAmount();
+
+                if(itemAmount+removedAmount >= amount) {
+
+                    item.setAmount( (itemAmount+removedAmount) - amount );
+                    return true;
+
+                }
+
+                removedAmount += itemAmount;
+
+                item.setAmount(0);
 
             }
 
@@ -181,5 +212,42 @@ public class Playerf {
         }
 
         return false;
+    }
+
+    public static boolean has(Player player, ItemStack itemstack) {
+        ItemStack item = itemstack.clone();
+        item.setAmount(1);
+
+        for(ItemStack i : player.getInventory().getContents()) {
+
+            ItemStack _i = i.clone();
+            _i.setAmount(1);
+
+            if(_i.equals(item))
+                return true;
+
+        }
+
+        return false;
+    }
+
+    public static boolean has(Player player, String displayName, int amount) {
+
+        int _amount = 0;
+
+        for(ItemStack item : player.getInventory().getContents()) {
+
+            if(Itemf.getDisplayName(item).equals(displayName)) {
+
+                _amount += item.getAmount();
+
+                if(_amount >= amount)
+                    return true;
+            }
+
+        }
+
+        return false;
+
     }
 }
