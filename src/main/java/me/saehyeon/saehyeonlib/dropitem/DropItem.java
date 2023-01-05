@@ -138,8 +138,10 @@ public class DropItem implements Serializable {
     public void StopDrop() {
         isDropping = false;
 
-        if(dropTask != null)
+        if(dropTask != null) {
             dropTask.cancel();
+            dropTask = null;
+        }
 
         SaehyeonLibEvent.doEvent(new ItemDropStopEvent(region));
 

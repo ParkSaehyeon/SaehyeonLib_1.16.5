@@ -107,9 +107,14 @@ public class Timer {
 
     public Timer clear() {
         bukkitTask.cancel();
-        bossBar.setProgress(1);
+        bukkitTask = null;
+        pause = false;
+        leftTime = seconds;
 
-        bossBar.removeAll();
+        if(bossBar != null) {
+            bossBar.setProgress(1);
+            bossBar.removeAll();
+        }
 
         return this;
     }
