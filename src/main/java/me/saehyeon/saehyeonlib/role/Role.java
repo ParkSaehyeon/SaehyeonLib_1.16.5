@@ -59,7 +59,8 @@ public class Role {
     public Role(String name, String prefix, int needPeople) {
         this.name = name;
         this.needPeople = needPeople;
-        team = SaehyeonLib.scoreboard.registerNewTeam(name);
+        this.team = SaehyeonLib.scoreboard.registerNewTeam(name);
+        setPrefix(prefix);
     }
 
     /**
@@ -117,6 +118,8 @@ public class Role {
      */
     public Role remove(Player player) {
         players.remove(player);
+        team.removeEntry(player.getName());
+
         SaehyeonLibEvent.doEvent(new RolePlayerRemoveEvent(player,this));
         SaehyeonLibEvent.doEvent(new RoleChangeEvent(this));
 
@@ -402,4 +405,14 @@ public class Role {
 
     }
 
+    public static ArrayList<Role> getByState(String key, Object value) {
+        ArrayList<Role> result = new ArrayList<>( roles );
+        result.removeIf(role -> role.getState(key) == null || role.getState(key) != value);
+
+        return result;
+    }
+
+    public static ArrayList<Role> getRoles() {
+        return new ArrayList<>( roles );
+    }
 }

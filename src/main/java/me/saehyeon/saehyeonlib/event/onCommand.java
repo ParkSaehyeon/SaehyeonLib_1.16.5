@@ -636,8 +636,6 @@ public class onCommand implements CommandExecutor {
 
                 case "t":
 
-                    Playerf.removeItem(p, "§6옆전",10);
-
                     break;
             }
         }

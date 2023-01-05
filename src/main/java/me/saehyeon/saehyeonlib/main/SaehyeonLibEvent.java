@@ -28,7 +28,7 @@ public class SaehyeonLibEvent {
                     try {
                         method.invoke(listener, obj);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        e.getCause().printStackTrace();
                         System.out.println(e+"");
                     }
 

@@ -145,13 +145,33 @@ public class Playerf {
         sendTitle(new ArrayList<>( Bukkit.getOnlinePlayers() ),title,subtitle);
     }
 
+    public static boolean removeHandItem(Player player, int amount) {
+        int handAmount = Playerf.getMainHand(player).getAmount();
+
+        boolean result = handAmount >= amount;
+
+        Playerf.getMainHand(player).setAmount(handAmount-amount);
+
+        return result;
+    }
+
+    public static boolean removeLeftHandItem(Player player, int amount) {
+        int handAmount = Playerf.getLeftHand(player).getAmount();
+
+        boolean result = handAmount >= amount;
+
+        Playerf.getLeftHand(player).setAmount(handAmount-amount);
+
+        return result;
+    }
+
     public static boolean removeItem(Player player, String displayName, int amount) {
 
         int removedAmount = 0;
 
         for(ItemStack item : player.getInventory().getContents()) {
 
-            if(Itemf.getDisplayName(item).equals(displayName)) {
+            if(item != null && Itemf.getDisplayName(item).equals(displayName)) {
 
                 int itemAmount = item.getAmount();
 
@@ -180,7 +200,7 @@ public class Playerf {
 
         for(ItemStack item : player.getInventory().getContents()) {
 
-            if(item.getType() == material) {
+            if(item != null && item.getType() == material) {
 
                 int itemAmount = item.getAmount();
 
@@ -199,13 +219,13 @@ public class Playerf {
 
         }
 
-        return removedAmount == amount;
+        return removedAmount >= amount;
 
     }
 
-    public static boolean removeItemByName(Player player, String displayName) {
+    public static boolean removeItem(Player player, String displayName) {
         for(ItemStack item : player.getInventory().getContents()) {
-            if(Itemf.getDisplayName(item).equals(displayName)) {
+            if(item != null && Itemf.getDisplayName(item).equals(displayName)) {
                 player.getInventory().remove(item);
                 return true;
             }
@@ -220,11 +240,15 @@ public class Playerf {
 
         for(ItemStack i : player.getInventory().getContents()) {
 
-            ItemStack _i = i.clone();
-            _i.setAmount(1);
+            if(i != null) {
 
-            if(_i.equals(item))
-                return true;
+                ItemStack _i = i.clone();
+                _i.setAmount(1);
+
+                if (_i.equals(item))
+                    return true;
+
+            }
 
         }
 
@@ -237,7 +261,7 @@ public class Playerf {
 
         for(ItemStack item : player.getInventory().getContents()) {
 
-            if(Itemf.getDisplayName(item).equals(displayName)) {
+            if(item != null && Itemf.getDisplayName(item).equals(displayName)) {
 
                 _amount += item.getAmount();
 
