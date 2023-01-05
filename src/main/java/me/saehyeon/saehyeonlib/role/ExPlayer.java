@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -113,6 +114,19 @@ public class ExPlayer {
      */
     public static boolean contains(Player player) {
         return exPlayerUUIDs.contains(player.getUniqueId());
+    }
+
+    public static ArrayList<Player> getPlayers() {
+        ArrayList<Player> players = new ArrayList<>();
+
+        exPlayerUUIDs.forEach(uuid -> {
+            Player p = Bukkit.getPlayer(uuid);
+
+            if(p != null)
+                players.add(p);
+        });
+
+        return players;
     }
 
     /**

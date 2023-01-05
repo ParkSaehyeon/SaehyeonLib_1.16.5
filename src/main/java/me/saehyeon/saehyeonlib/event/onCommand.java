@@ -368,6 +368,11 @@ public class onCommand implements CommandExecutor {
                             if(!sender.hasPermission("saehyeonlib.explayer.list"))
                                 return SaehyeonLib.sendError(p, ErrorMessage.NO_PERMISSION);
 
+                            p.sendMessage("");
+                            p.sendMessage("현재 서버에 있는 예외 플레이어 목록입니다: ");
+
+                            ExPlayer.getPlayers().forEach(_p -> finalP.sendMessage(" - "+_p.getName()));
+
                             break;
 
                         default:
