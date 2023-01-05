@@ -39,16 +39,23 @@ public class Timer {
         this.seconds = seconds;
     }
 
-    public void start() {
+    public Timer start() {
 
-        if(bossBar != null)
+        String bossBarTitle = "";
+
+        if(bossBar != null) {
             bossBar.setProgress(1);
+            bossBar.setVisible(true);
 
-        // 보스바를 모두에게 띄우기
-        Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
+            // 보스바를 모두에게 띄우기
+            Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
 
-        // 보스바 초기 타이틀을 저장하기
-        final String bossBarTitle = bossBar.getTitle();
+            // 보스바 초기 타이틀을 저장하기
+            bossBarTitle = bossBar.getTitle();
+
+        }
+
+        final String finalBossBarTitle = bossBarTitle;
 
         leftTime = seconds;
 
@@ -66,7 +73,7 @@ public class Timer {
 
 
                     // 약속된 문자열을 시,분,초로 치환
-                    String _title = bossBarTitle.replace("{hour}", hms[0]+"")
+                    String _title = finalBossBarTitle.replace("{hour}", hms[0]+"")
                             .replace("{minute}",hms[1]+"")
                             .replace("{second}",hms[2]+"")
                             .replace("{h}",hms[0]+"")
@@ -95,39 +102,57 @@ public class Timer {
         // 이벤트 발생시키기
         SaehyeonLibEvent.doEvent(new TimerStartEvent(this));
 
+        return this;
     }
 
-    public void stop() {
+    public Timer clear() {
+        bukkitTask.cancel();
+        bossBar.setProgress(1);
+
+        bossBar.removeAll();
+
+        return this;
+    }
+
+    public Timer stop() {
         if(bukkitTask != null)
             bukkitTask.cancel();
 
         // 이벤트 발생시키기
         SaehyeonLibEvent.doEvent(new TimerStopEvent(this));
 
+        return this;
     }
 
-    public void setPause(boolean pause) {
+    public Timer setPause(boolean pause) {
         this.pause = pause;
 
         // 이벤트 발생시키기
         SaehyeonLibEvent.doEvent(new TimerPauseEvent(this));
 
+        return this;
     }
 
-    public void setName(String name) {
+    public Timer setName(String name) {
         this.name = name;
+
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setLeftTime(int leftTime) {
+    public Timer setLeftTime(int leftTime) {
         this.leftTime = leftTime;
+
+        return this;
     }
 
-    public void setSeconds(int seconds) {
+    public Timer setSeconds(int seconds) {
         this.seconds = seconds;
+
+        return this;
     }
 
     public int getLeftTime() {
@@ -146,13 +171,13 @@ public class Timer {
         return bossBar;
     }
 
-    public static void StartTimer(String timerName, BossBar bossBar, int seconds) {
+    public static Timer StartTimer(String timerName, BossBar bossBar, int seconds) {
 
         Timer _timer = findByName(timerName);
 
         if(_timer != null) {
             SaehyeonLib.log(LogLevel.WARNING, timerName+"(이)라는 타이머를 설정하지 않았습니다. (이미 같은 이름의 타이머가 등록되어 있습니다.)");
-            return;
+            return null;
         }
 
         Timer timer = new Timer(timerName, bossBar,seconds);
@@ -160,10 +185,17 @@ public class Timer {
         timerInfos.add(timer);
         timer.start();
 
+        return timer;
     }
 
-    public static void StopTimer(String timerName) {
-        findByName(timerName).stop();
+    public static Timer StopTimer(String timerName) {
+        Timer timer = findByName(timerName);
+
+        if(timer != null)
+            return timer.stop();
+
+        SaehyeonLib.log(LogLevel.ERROR,timerName+"(이)라는 타이머를 찾을 수 없으므로 타이머 종료 작업을 하지 못했습니다.");
+        return null;
     }
 
     public static boolean contains(Timer timer) {
