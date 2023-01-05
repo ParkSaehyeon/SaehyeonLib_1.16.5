@@ -56,6 +56,9 @@ public final class SaehyeonLib extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        // 저장하기 전에 모든 지역의 아이템 드롭 멈추기
+        Region.getRegions().forEach(r -> r.getDropItem().StopDrop());
+
         ExPlayer.save();
         Region.save();
         new PlayerState().save();
