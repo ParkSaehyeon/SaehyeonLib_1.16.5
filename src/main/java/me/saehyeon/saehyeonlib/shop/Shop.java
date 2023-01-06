@@ -54,9 +54,10 @@ public class Shop implements Serializable {
         this.name = name;
     }
 
-    public Shop(String name, String guiTitle) {
+    public Shop(String name, String guiTitle, int rows) {
         this.name = name;
         this.guiTitle = guiTitle;
+        this.guiRows = rows;
     }
 
     public Shop setName(String name) {
