@@ -82,6 +82,9 @@ public class State {
 
             state = (HashMap<String, Object>) Serialize.deSerialize(str);
 
+            if(state == null)
+                state = new HashMap<>();
+
         } else {
 
             state = new HashMap<>();

@@ -32,4 +32,8 @@ public class Locationf {
 
         return locs;
     }
+
+    public static boolean equal(Location loc1, Location loc2) {
+        return loc1.getX() == loc2.getX() && loc1.getY() == loc2.getY() && loc1.getZ() == loc2.getZ();
+    }
 }

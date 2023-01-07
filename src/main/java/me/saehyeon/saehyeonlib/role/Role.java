@@ -31,7 +31,7 @@ public class Role {
     public static ArrayList<Role> roles = new ArrayList<>();
 
     // 이 역할에 소속된 플레이어들
-    ArrayList<Player> players = new ArrayList<>();
+    ArrayList<UUID> uuids = new ArrayList<>();
 
     // 역할의 이름
     String name;
@@ -91,7 +91,7 @@ public class Role {
      */
     public Role add(Player player) {
 
-        if(players.contains(player))
+        if(uuids.contains(player.getUniqueId()))
             return this;
 
         // 플레이어가 기존에 가지고 있던 역할은 없애기
@@ -100,7 +100,7 @@ public class Role {
         if(formerRole != null)
             formerRole.remove(player);
 
-        players.add(player);
+        uuids.add(player.getUniqueId());
 
         // 팀에 플레이어 추가하기
         player.setScoreboard(SaehyeonLib.scoreboard);
@@ -117,7 +117,7 @@ public class Role {
      * @param player 제거될 플레이어
      */
     public Role remove(Player player) {
-        players.remove(player);
+        uuids.remove(player.getUniqueId());
         team.removeEntry(player.getName());
 
         SaehyeonLibEvent.doEvent(new RolePlayerRemoveEvent(player,this));
@@ -131,7 +131,18 @@ public class Role {
      * @return 이 역할에 소속된 플레이어들
      */
     public ArrayList<Player> getPlayers() {
-        return players;
+
+        ArrayList<Player> result = new ArrayList<>();
+
+        for(UUID uuid : uuids) {
+            Player p = Bukkit.getPlayer(uuid);
+
+            if(p != null)
+                result.add(p);
+
+        }
+
+        return result;
     }
 
     /**
@@ -159,14 +170,6 @@ public class Role {
      */
     public Object getState(String key) {
         return state.getOrDefault(key, null);
-    }
-
-    /**
-     * 이 역할이 부여된 플레이어들에게 무언가를 합니다.
-     * @param callback (player) -> { player.sendMessage("ㅎㅇ"); } 이런식으로 이 역할이 부여된 플레이어들에게 인사할 수 있습니다!
-     */
-    public void doPlayers(RoleCallback callback) {
-        players.forEach(callback::call);
     }
 
     /**
@@ -237,15 +240,6 @@ public class Role {
     }
 
     /**
-     * 특정 역할을 가지고 있는 플레이어들에게 해당 플레이어들이 매개변수로 있는 람다식을 실행합니다.
-     * @param role 특정 역할
-     * @param callback Player형 매개변수가 있는 람다식
-     */
-    public static void doPlayers(Role role, RoleCallback callback) {
-        role.getPlayers().forEach(callback::call);
-    }
-
-    /**
      * 지정된 플레이어들에게 랜덤으로 역할을 배정합니다. <br>
      * 이때, 배정 인원이 정해진(Role 클래스의 needPeople이 0이 아닌 역할)에 먼저 사람이 배정되고<br>
      * 그 이후, 나머지 역할에 사람이 배정됩니다.<br><br>
@@ -297,14 +291,14 @@ public class Role {
 
         for(Role role : needPeopleRoles) {
 
-            SaehyeonLib.debugLog(" -> "+role.getName()+"에 역할 분배중 (필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.players.size()+")");
+            SaehyeonLib.debugLog(" -> "+role.getName()+"에 역할 분배중 (필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.uuids.size()+")");
 
-            while(role.needPeople != role.players.size()) {
+            while(role.needPeople != role.uuids.size()) {
 
                 Player targetPlayer = players.get(curPlayersIndex++);
                 role.add(targetPlayer);
                 SaehyeonLib.debugLog(" --> "+targetPlayer.getName()+"(이)가 이 역할에 소속됐음.");
-                SaehyeonLib.debugLog(" ---> 이 역할의 필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.players.size());
+                SaehyeonLib.debugLog(" ---> 이 역할의 필요 인원 수: "+role.needPeople+", 현재 인원 수: "+role.uuids.size());
             }
 
         }

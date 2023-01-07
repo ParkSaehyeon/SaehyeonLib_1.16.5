@@ -79,6 +79,9 @@ public class PlayerState {
 
             state = (HashMap<UUID, HashMap<String, Object>>) Serialize.deSerialize(str);
 
+            if(state == null)
+                state = new HashMap<>();
+
         } else {
             state = new HashMap<>();
         }

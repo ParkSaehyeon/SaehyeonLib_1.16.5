@@ -4,8 +4,11 @@ import me.saehyeon.saehyeonlib.main.LogLevel;
 import me.saehyeon.saehyeonlib.main.SaehyeonLib;
 import me.saehyeon.saehyeonlib.main.SaehyeonLibEvent;
 import me.saehyeon.saehyeonlib.role.event.ExPlayerAddEvent;
+import me.saehyeon.saehyeonlib.util.BukkitTaskf;
 import me.saehyeon.saehyeonlib.util.Playerf;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import java.io.BufferedReader;
@@ -114,6 +117,35 @@ public class ExPlayer {
      */
     public static boolean contains(Player player) {
         return exPlayerUUIDs.contains(player.getUniqueId());
+    }
+
+    public static void announce(String message) {
+
+        getPlayers().forEach(p -> {
+
+            for(int i = 0; i < 10; i++) {
+
+                final int ii = i;
+
+                BukkitTaskf.wait(() -> {
+
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,1);
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, SoundCategory.MASTER,1,1.5f);
+
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, SoundCategory.MASTER,1,1);
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, SoundCategory.MASTER,1,1.5f);
+
+                    p.sendTitle( (ii % 2 == 0 ? "§b§l" : "§f§l")+"운영진 알림","",0,30,0);
+
+                },4*ii);
+
+            }
+
+            p.sendMessage("");
+            p.sendMessage("§b§l운영진 알림 〉 §f"+message);
+            p.sendMessage("");
+
+        });
     }
 
     public static ArrayList<Player> getPlayers() {

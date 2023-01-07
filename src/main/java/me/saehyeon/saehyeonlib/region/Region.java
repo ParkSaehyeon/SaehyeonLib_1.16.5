@@ -4,8 +4,11 @@ import me.saehyeon.saehyeonlib.dropitem.DropItem;
 import me.saehyeon.saehyeonlib.itemplacer.ItemPlacer;
 import me.saehyeon.saehyeonlib.main.SaehyeonLib;
 import me.saehyeon.saehyeonlib.util.Filef;
+import me.saehyeon.saehyeonlib.util.Locationf;
 import me.saehyeon.saehyeonlib.util.Serialize;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 import java.util.*;
@@ -103,6 +106,13 @@ public class Region implements Serializable {
 
     public DropItem getDropItem() {
         return dropItem;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        ArrayList<Player> result = new ArrayList<>( Bukkit.getOnlinePlayers() );
+        result.removeIf(p -> !Locationf.isWithin(p.getLocation(),pos1,pos2));
+
+        return result;
     }
 
     /**

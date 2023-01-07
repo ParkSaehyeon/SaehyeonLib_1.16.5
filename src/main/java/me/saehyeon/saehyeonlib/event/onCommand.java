@@ -640,7 +640,7 @@ public class onCommand implements CommandExecutor {
                     break;
 
                 case "t":
-
+                    ExPlayer.announce("Hello World");
                     break;
             }
         }
