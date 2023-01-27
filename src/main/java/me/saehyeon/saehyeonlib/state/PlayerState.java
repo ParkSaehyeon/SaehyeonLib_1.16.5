@@ -61,6 +61,27 @@ public class PlayerState {
         return Boolean.parseBoolean(get(player,key)+"");
     }
 
+    public static String getString(Player player, String key, String def) {
+
+        return get(player,key) == null ? def : get(player,key)+"";
+    }
+
+    public static int getInteger(Player player, String key, int def) {
+        return get(player,key) == null ? def : Integer.parseInt(get(player,key)+"");
+    }
+
+    public static float getFloat(Player player, String key, float def) {
+        return get(player,key) == null ? def : Float.parseFloat(get(player,key)+"");
+    }
+
+    public static double getDouble(Player player, String key, double def) {
+        return get(player,key) == null ? def : Double.parseDouble(get(player,key)+"");
+    }
+
+    public static boolean getBoolean(Player player, String key, boolean def) {
+        return get(player,key) == null ? def : Boolean.parseBoolean(get(player,key)+"");
+    }
+
     public void save() {
 
         String str = Serialize.serialize(state);
